@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { Download } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { ModelSelector } from '@/components/ModelSelector';
-import { Co2Visualization } from '@/components/Co2Visualization';
-import { EnergyVisualization } from '@/components/EnergyVisualization';
 import { PromptInput } from '@/components/PromptInput';
 import { ResponseDisplay } from '@/components/ResponseDisplay';
 import { useEco } from '@/contexts/EcoContext';
@@ -34,25 +32,19 @@ export default function Index() {
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {/* CO2 Visualization */}
-          <Co2Visualization value={4.9} avg={4.5} frameNumber={3} />
-
+        <div className="mb-8">
           {/* Response Area */}
-          <div className="lg:col-span-1">
+          <div className="max-w-2xl mx-auto">
             {hasPrompted ? (
               <ResponseDisplay text={response} />
             ) : (
-              <div className="glass-card p-6 h-full flex items-center justify-center">
+              <div className="glass-card p-6 flex items-center justify-center min-h-[120px]">
                 <p className="text-muted-foreground text-center text-sm">
                   Enter a prompt to see AI response and metrics
                 </p>
               </div>
             )}
           </div>
-
-          {/* Energy Visualization */}
-          <EnergyVisualization value={0.78} avg={0.69} frameNumber={4} />
         </div>
 
         {/* Metrics Row */}
