@@ -6,18 +6,33 @@ import { PromptInput } from '@/components/PromptInput';
 import { ResponseDisplay } from '@/components/ResponseDisplay';
 import { useEco } from '@/contexts/EcoContext';
 import { useModelContext } from '@/contexts/ModelContext';
+import { useHistory } from '@/contexts/HistoryContext';
 
 export default function Index() {
   const { ecoMode } = useEco();
   const { selectedModel } = useModelContext();
-  const [hasPrompted, setHasPrompted] = useState(false);
+  const { addToHistory } = useHistory();
+  const [currentPrompt, setCurrentPrompt] = useState('');
   const [response, setResponse] = useState('');
   
   const baseTokens = 35;
   const tokens = ecoMode ? Math.round(baseTokens * 0.7) : baseTokens;
+  const co2 = ecoMode ? 2.2 : 3.1;
 
   const handlePrompt = (prompt: string) => {
-    setHasPrompted(true);
+    // If there's already a response, save it to history first
+    if (response && currentPrompt) {
+      addToHistory({
+        prompt: currentPrompt,
+        response: response,
+        model: selectedModel?.name || 'Unknown',
+        tokens: tokens,
+        co2: co2,
+      });
+    }
+
+    // Set new prompt and generate response
+    setCurrentPrompt(prompt);
     setResponse(
       "Artificial intelligence (AI) is the capability of computational systems to perform tasks typically associated with human intelligence, such as learning, reasoning, problem-solving, perception, and decision-making. It is a field of research in computer science that develops and studies methods and software that enable machines."
     );
@@ -35,8 +50,14 @@ export default function Index() {
         <div className="mb-8">
           {/* Response Area */}
           <div className="max-w-2xl mx-auto">
-            {hasPrompted ? (
-              <ResponseDisplay text={response} />
+            {response ? (
+              <div className="space-y-4">
+                <div className="glass-card p-4 border-l-2 border-primary/50">
+                  <p className="text-sm text-muted-foreground mb-1">Your prompt:</p>
+                  <p className="text-foreground">{currentPrompt}</p>
+                </div>
+                <ResponseDisplay text={response} />
+              </div>
             ) : (
               <div className="glass-card p-6 flex items-center justify-center min-h-[120px]">
                 <p className="text-muted-foreground text-center text-sm">
@@ -52,7 +73,7 @@ export default function Index() {
           <div className="glass-card px-6 py-3 rounded-full flex items-center gap-2">
             <span className="text-2xl">🌿</span>
             <span className="text-sm text-muted-foreground">CO2</span>
-            <span className="font-bold text-foreground ml-2">{ecoMode ? '2.2' : '3.1'} gm</span>
+            <span className="font-bold text-foreground ml-2">{co2} gm</span>
             <span className={`text-xs ml-2 ${ecoMode ? 'text-eco-green' : 'text-energy-red'}`}>
               {ecoMode ? '-30%' : '+11.6%'}
             </span>

@@ -1,21 +1,9 @@
-import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { Clock, FileText, Trash2 } from 'lucide-react';
-
-const initialHistory = [
-  { id: '1', prompt: 'What is artificial intelligence?', model: 'OpenAI 4.0', tokens: 35, co2: 3.1, timestamp: '2 hours ago' },
-  { id: '2', prompt: 'Explain machine learning basics', model: 'Claude 6', tokens: 42, co2: 2.8, timestamp: '5 hours ago' },
-  { id: '3', prompt: 'Compare deep learning frameworks', model: 'Gemini 2.5', tokens: 58, co2: 4.2, timestamp: '1 day ago' },
-  { id: '4', prompt: 'Write a Python function for sorting', model: 'Perplexity 0.1.2', tokens: 28, co2: 2.1, timestamp: '2 days ago' },
-  { id: '5', prompt: 'Explain neural networks', model: 'OpenAI 4.0', tokens: 45, co2: 3.5, timestamp: '3 days ago' },
-];
+import { useHistory } from '@/contexts/HistoryContext';
 
 export default function History() {
-  const [history, setHistory] = useState(initialHistory);
-
-  const handleDelete = (id: string) => {
-    setHistory(prev => prev.filter(item => item.id !== id));
-  };
+  const { history, deleteFromHistory } = useHistory();
 
   return (
     <Layout showEcoToggle={false}>
@@ -46,7 +34,7 @@ export default function History() {
                   </div>
                 </div>
                 <button 
-                  onClick={() => handleDelete(item.id)}
+                  onClick={() => deleteFromHistory(item.id)}
                   className="p-2 hover:bg-destructive/20 rounded-lg transition-colors group"
                 >
                   <Trash2 className="w-4 h-4 text-muted-foreground group-hover:text-destructive" />
