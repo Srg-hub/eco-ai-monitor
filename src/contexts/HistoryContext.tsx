@@ -1,5 +1,13 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
+export interface EcoImpacts {
+  energy: { value: number; unit: string };
+  co2: { value: number; unit: string };
+  water: { value: number; unit: string };
+  primary_energy: { value: number; unit: string };
+  metal_depletion: { value: number; unit: string };
+}
+
 export interface HistoryItem {
   id: string;
   prompt: string;
@@ -7,6 +15,7 @@ export interface HistoryItem {
   model: string;
   tokens: number;
   co2: number;
+  impacts?: EcoImpacts;
   timestamp: string;
 }
 
